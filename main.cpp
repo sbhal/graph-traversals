@@ -1,6 +1,7 @@
 // C++ program to print DFS traversal from a given vertex in a  given graph
 #include<iostream>
 #include <list>
+#include <queue>
 
 using namespace std;
 
@@ -14,6 +15,8 @@ public:
     Graph(int V);   // Constructor
     void addEdge(int v, int w);   // function to add an edge to graph
     void DFS(int v);    // DFS traversal of the vertices reachable from v
+    void BFS(int v);
+    void BFSUtil(int v, bool visited[], queue<int, deque<int> >&);  // A function used by BFS
 };
 
 Graph::Graph(int V)
@@ -57,7 +60,33 @@ void Graph::DFS(int v)
     this->DFSUtil(v, visited);
 }
 
-int main()
+void Graph::BFS(int v)
+{
+    if(v > V)
+        cout <<"error"<<endl;
+    if(v> sizeof(adj))
+        cout <<"Out of bound access"<<endl;
+    bool *visited = new bool[V];
+    std::queue<int, deque<int> > Q;
+    for (int i =0; i < V; i++)
+        visited[i] = false;
+    Q.push(v);
+    while(!Q.empty())
+    {
+        int v = Q.front();
+        Q.pop();
+        visited[v] = true;
+        cout << v<< " ";
+        for(list<int>::iterator it=adj[v].begin(); it != adj[v].end(); it++)
+        {
+            if(visited[*it] == false)
+                Q.push(*it);
+
+        }
+    }
+}
+
+void main_dfs()
 {
     // Create a graph given in the above diagram
     Graph g(4);
@@ -70,6 +99,28 @@ int main()
 
     cout << "Following is Depth First Traversal (starting from vertex 2) - ";
     g.DFS(2);
-cout <<endl;
+    cout <<endl;
+
+}
+void main_bfs()
+{
+    // Create a graph given in the above diagram
+    Graph g(4);
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(1, 2);
+    g.addEdge(2, 0);
+    g.addEdge(2, 3);
+    g.addEdge(3, 3);
+
+    cout << "Following is Breadth First Traversal (starting from vertex 2) - ";
+    g.BFS(2);
+    cout <<endl;
+
+}
+
+int main()
+{
+    main_bfs();
     return 0;
 }
